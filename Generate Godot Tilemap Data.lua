@@ -28,8 +28,24 @@ local function decodeTileId(tileId)
   }
 end
 
-local file = io.open("C:\\Users\\James\\temp\\Aseprite\\output.txt", "w")
-file:write("tile_map_data = PackedByteArray(0, 0")
+local StringBuilder = {}
+StringBuilder.__index = StringBuilder
+
+function StringBuilder:new()
+  return setmetatable({ buffer = {} }, self)
+end
+
+function StringBuilder:append(str)
+  table.insert(self.buffer, str)
+  return self -- allows chaining
+end
+
+function StringBuilder:toString()
+  return table.concat(self.buffer)
+end
+
+local sb = StringBuilder:new()
+sb:append("tile_map_data = PackedByteArray(0, 0")
 
 local image = cel.image
 local tileset = layer.tileset
@@ -57,16 +73,13 @@ for mapPositionY = 0, height - 1 do
     
 
     if tilePositionX > 0 then
-        file:write(string.format(", %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d", mapPositionX, 0, mapPositionY, 0, 0, 0, tilePositionX, 0, tilePositionY, 0, 0, tileTransformation))
+        sb:append(string.format(", %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d", mapPositionX, 0, mapPositionY, 0, 0, 0, tilePositionX, 0, tilePositionY, 0, 0, tileTransformation))
     end
   end
 end
 
-file:write(")")
-file:close()
+sb:append(") -- new")
 
 local dlg = Dialog()
-dlg:entry{ id="user_value", label="User Value:", text="tile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 16, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 32, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 64, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 3, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 4, 0, 0, 0, 0, 0, 3, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0)" }
-dlg:button{ id="confirm", text="Confirm" }
-dlg:button{ id="cancel", text="Cancel" }
+dlg:entry{ id="user_value", label="Copy to clipboard: ", text=sb:toString() }
 dlg:show()
