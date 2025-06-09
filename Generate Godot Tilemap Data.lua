@@ -59,6 +59,11 @@ for mapPositionY = 0, height - 1 do
         local tilePositionY = 0
         local tileTransformation = 0
 
+        local mapPositionRemainderX = math.fmod(mapPositionX, 256)
+        local mapPositionOverflowX =  math.floor(mapPositionX / 256)
+        local mapPositionRemainderY = math.fmod(mapPositionY, 256)
+        local mapPositionOverflowY =  math.floor(mapPositionY / 256)
+
         if tile.flipX then
             tileTransformation = tileTransformation | 0x00000010
         end
@@ -72,7 +77,20 @@ for mapPositionY = 0, height - 1 do
         end
 
         if tilePositionX > 0 then
-            sb:append(string.format(", %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d", mapPositionX, 0, mapPositionY, 0, 0, 0, tilePositionX, 0, tilePositionY, 0, 0, tileTransformation))
+            sb:append(string.format(", %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d",
+                    mapPositionRemainderX, -- This is mapPositionX, but it can only go up to 255
+                    mapPositionOverflowX,  -- This is how many times mapPositionX has exceeded 255
+                    mapPositionRemainderY, -- This is mapPositionY, but it can only go up to 255
+                    mapPositionOverflowY,  -- This is how many times mapPositionY has exceeded 255
+                    0, -- I think this has something to do with which tileset is being used
+                    0, -- <-- Don't know what this is for yet
+                    tilePositionX,
+                    0, -- <-- Don't know what this is for yet
+                    tilePositionY,
+                    0, -- <-- Don't know what this is for yet
+                    0, -- <-- Don't know what this is for yet
+                    tileTransformation
+            ))
         end
     end
 end
