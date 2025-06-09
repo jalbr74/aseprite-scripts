@@ -104,4 +104,5 @@ f:close()
 
 local dlg = Dialog()
 dlg:entry { id = "user_value", label = "tile_map_data saved to this file: ", text = path }
+dlg:canvas{ width=300 }
 dlg:show()
