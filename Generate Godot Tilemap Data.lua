@@ -78,8 +78,13 @@ for mapPositionY = 0, height - 1 do
   end
 end
 
-sb:append(") -- new")
+sb:append(")")
+
+local path = app.fs.joinPath(app.fs.tempPath, "aseprite-tilemap-output.txt")
+local f = io.open(path, "w")
+f:write(sb:toString())
+f:close()
 
 local dlg = Dialog()
-dlg:entry{ id="user_value", label="Copy to clipboard: ", text=sb:toString() }
+dlg:entry{ id="user_value", label="tile_map_data saved to this file: ", text=path }
 dlg:show()
