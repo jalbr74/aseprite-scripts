@@ -1,3 +1,5 @@
+-- This script assumes the tiles have been exported from Aseprite as horizontally packed.
+
 -- app.clipboard.clear() -- Should be available by v1.3.14 (I'm currently on 1.3.13)
 
 local sprite = app.activeSprite
@@ -55,8 +57,8 @@ for mapPositionY = 0, height - 1 do
     for mapPositionX = 0, width - 1 do
         local tileId = image:getPixel(mapPositionX, mapPositionY)
         local tile = decodeTileId(tileId)
-        local tilePositionX = tile.tileIndex
-        local tilePositionY = 0
+        local tilePositionX = tile.tileIndex -- tilePositionX is the same as tileIndex because tiles are horizontally packed
+        local tilePositionY = 0              -- This is always zero because there is only one row
         local tileTransformation = 0
 
         local mapPositionRemainderX = math.fmod(mapPositionX, 256)
@@ -82,13 +84,13 @@ for mapPositionY = 0, height - 1 do
                     mapPositionOverflowX,  -- This is how many times mapPositionX has exceeded 255
                     mapPositionRemainderY, -- This is mapPositionY, but it can only go up to 255
                     mapPositionOverflowY,  -- This is how many times mapPositionY has exceeded 255
-                    0, -- I think this has something to do with which tileset is being used
-                    0, -- <-- Don't know what this is for yet
+                    0, -- I think this has something to do with which tileset is being used, because if I start over and use a new tileset, this number increases and throws off my Aseprite output
+                    0, -- Don't know what this is for yet
                     tilePositionX,
-                    0, -- <-- Don't know what this is for yet
+                    0, -- Don't know what this is for yet
                     tilePositionY,
-                    0, -- <-- Don't know what this is for yet
-                    0, -- <-- Don't know what this is for yet
+                    0, -- Don't know what this is for yet
+                    0, -- Don't know what this is for yet
                     tileTransformation
             ))
         end
